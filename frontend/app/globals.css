@@ -43,7 +43,7 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-:root {
+/* :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -110,6 +110,68 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+} */
+:root {
+  --radius: 1rem;
+  --background: rgb(250,250,250);
+  --foreground: rgb(20,28,28);
+  --card: rgb(248,248,248);
+  --card-foreground: rgb(25,30,30);
+  --popover: rgb(248,248,248);
+  --popover-foreground: rgb(25,30,30);
+  --primary: rgb(0,190,190);
+  --primary-foreground: rgb(15,10,20);
+  --secondary: rgb(160,120,255);
+  --secondary-foreground: rgb(25,30,30);
+  --muted: rgb(220,225,235);
+  --muted-foreground: rgb(110,130,150);
+  --accent: rgb(240,60,200);
+  --accent-foreground: rgb(25,30,30);
+  --destructive: rgb(220,70,60);
+  --destructive-foreground: rgb(250,250,250);
+  --border: rgb(215,218,225);
+  --input: rgb(215,218,225);
+  --ring: rgb(0,190,190);
+  --glow-cyan: rgb(0,190,190);
+  --glow-purple: rgb(160,120,255);
+  --glow-magenta: rgb(240,60,200);
+  --gradient-primary: linear-gradient(135deg, rgb(0,190,190), rgb(160,120,255));
+  --gradient-secondary: linear-gradient(135deg, rgb(160,120,255), rgb(240,60,200));
+  --gradient-accent: linear-gradient(90deg, rgb(0,190,190), rgb(240,60,200));
+  --shadow-glow: 0 0 40px rgb(0,190,190,0.4);
+  --shadow-glow-purple: 0 0 40px rgb(160,120,255,0.4);
+  --shadow-glow-magenta: 0 0 40px rgb(240,60,200,0.4);
+}
+
+.dark {
+  --background: rgb(8,8,12);
+  --foreground: rgb(235,255,255);
+  --card: rgb(12,12,16);
+  --card-foreground: rgb(235,255,255);
+  --popover: rgb(14,14,18);
+  --popover-foreground: rgb(235,255,255);
+  --primary: rgb(0,170,170);
+  --primary-foreground: rgb(8,8,12);
+  --secondary: rgb(180,90,255);
+  --secondary-foreground: rgb(235,255,255);
+  --muted: rgb(28,28,38);
+  --muted-foreground: rgb(150,180,200);
+  --accent: rgb(255,40,180);
+  --accent-foreground: rgb(235,255,255);
+  --destructive: rgb(200,50,45);
+  --destructive-foreground: rgb(250,250,250);
+  --border: rgb(25,25,35);
+  --input: rgb(25,25,35);
+  --ring: rgb(0,170,170);
+  --glow-cyan: rgb(0,170,170);
+  --glow-purple: rgb(180,90,255);
+  --glow-magenta: rgb(255,40,180);
+  --gradient-primary: linear-gradient(135deg, rgb(0,170,170), rgb(180,90,255));
+  --gradient-secondary: linear-gradient(135deg, rgb(180,90,255), rgb(255,40,180));
+  --gradient-accent: linear-gradient(90deg, rgb(0,170,170), rgb(255,40,180));
+  --shadow-glow: 0 0 40px rgb(0,170,170,0.4);
+  --shadow-glow-purple: 0 0 40px rgb(180,90,255,0.4);
+  --shadow-glow-magenta: 0 0 40px rgb(255,40,180,0.4);
 }
 
 @layer base {
