@@ -1,0 +1,7 @@
+
+.navbar aside {
+  @apply w-[70px] h-[70%] cursor-pointer;
+}
+.navbar img{
+  @apply w-full h-full object-cover object-contain;
+}

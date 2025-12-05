@@ -1,3 +1,4 @@
+"use client";
 import Navbar from "@/components/commons/navbar";
 import { motion } from "framer-motion";
 import { Zap, Trophy, Users } from "lucide-react";
@@ -203,12 +204,12 @@ const FAQ = () => (
 export default function Home() {
 
   return (
-    <main className="w-full">
+    <>
       <Navbar />
       <Hero />
       <TopGames />
       <FAQ />
       {/* <Footer /> */}
-    </main>
+    </>
   )
 }

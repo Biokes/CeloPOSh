@@ -1,7 +1,7 @@
-@import "tailwindcss";
-@import "tw-animate-css";
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Henny+Penny&family=Ribeye&family=UnifrakturCook:wght@700&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -178,13 +178,28 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 ;
   }
   body {
-    @apply bg-background text-foreground max-w-[1360px];
+    @apply bg-background text-foreground w-full  flex flex-col justify-center items-center;
   }
+}
+.body{
+  @apply w-full flex flex-col justify-center items-center max-w-[1360px];
 }
 .cancelButton {
   @apply h-[30px] w-[100px] rounded-sm bg-[#0B0B0E] hover:bg-[#0B0B0E] border-[#f8b141] border-[1px] text-primary hover:text-red-400 hover:cursor-not-allowed;
   font-family: "ribeye";
+}
+.body{
+  @appy flex justify-between items-center h-[70px] py-2 px-4 shadow-sm shadow-primary/40;
+}
+.navbar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  padding: 0.8rem 0.3rem;
+  width: 100%;
+  @apply shadow-sm shadow-primary/40;
 }
