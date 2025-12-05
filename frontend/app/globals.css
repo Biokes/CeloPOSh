@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Henny+Penny&family=Ribeye&family=UnifrakturCook:wght@700&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -181,4 +183,8 @@
   body {
     @apply bg-background text-foreground max-w-[1360px];
   }
+}
+.cancelButton {
+  @apply h-[30px] w-[100px] rounded-sm bg-[#0B0B0E] hover:bg-[#0B0B0E] border-[#f8b141] border-[1px] text-primary hover:text-red-400 hover:cursor-not-allowed;
+  font-family: "ribeye";
 }

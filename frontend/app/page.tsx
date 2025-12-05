@@ -1,3 +1,4 @@
+import Navbar from "@/components/commons/navbar";
 import { motion } from "framer-motion";
 import { Zap, Trophy, Users } from "lucide-react";
 import { toast } from "sonner";
@@ -207,7 +208,7 @@ export default function Home() {
       <Hero />
       <TopGames />
       <FAQ />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   )
 }
