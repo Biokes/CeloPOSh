@@ -1,4 +1,4 @@
 on:
   push:
-    branch:
-      - main    
+    branch: ["main", "dev"]
+    
