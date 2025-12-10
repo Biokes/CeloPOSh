@@ -1,20 +1,40 @@
-import { getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+import {
+  metaMaskWallet,
+  walletConnectWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+import { base, baseSepolia } from "viem/chains";
+import { http, createConfig } from 'wagmi';
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { base, baseSepolia } from "viem/chains";
-import { http } from 'viem';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const config = getDefaultConfig({
-  appName: 'My RainbowKit App',
-  projectId: 'YOUR_PROJECT_ID',
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: 'Recommended',
+      wallets: [
+        metaMaskWallet,
+        coinbaseWallet,
+        walletConnectWallet,
+      ],
+    },
+  ],
+  {
+    appName: 'My RainbowKit App',
+    projectId: 'YOUR_PROJECT_ID',
+    enableSmartAccounts: false,
+  }
+);
+
+export const config = createConfig({
   chains: [base, baseSepolia],
-   transports: {
-    [baseSepolia.id]: http(),
+  connectors,
+  transports: {
     [base.id]: http(),
+    [baseSepolia.id]: http(),
   },
-  // ssr: true
-})
+});

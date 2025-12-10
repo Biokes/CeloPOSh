@@ -36,7 +36,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
-              <RainbowKitProvider theme={lightTheme({ accentColor: '#045d67', accentColorForeground: 'white' })}>
+              <RainbowKitProvider coolMode
+                theme={lightTheme({ accentColor: '#045d67', accentColorForeground: 'white' })}>
               <div className="body">
                 {children}
               </div>
