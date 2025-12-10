@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/themeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,17 +14,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gamiit",
+  title: "ChainSkills",
   description: "Games for all, all for games",
 };
 
 export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+         <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >  
         <div className="body">
         {children}
         </div> 
+          </ThemeProvider>
       </body>
     </html>
   );
