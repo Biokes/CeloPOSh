@@ -19,6 +19,7 @@ function Hero() {
           </span>
           <br /> Join the on-chain gaming revolution.
         </p>
+        <button >Get Started</button>
       </motion.article>
     </main>
   )
