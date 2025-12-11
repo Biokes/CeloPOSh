@@ -69,9 +69,9 @@
   --glow-cyan: rgb(0,190,190);
   --glow-purple: rgb(160,120,255);
   --glow-magenta: rgb(240,60,200);
-  --gradient-primary: linear-gradient(135deg, rgb(0,190,190), rgb(160,120,255));
-  --gradient-secondary: linear-gradient(135deg, rgb(160,120,255), rgb(240,60,200));
-  --gradient-accent: linear-gradient(90deg, rgb(0,190,190), rgb(240,60,200));
+  --gradient-primary: linear-gradient(135deg,rgb(75, 252, 252) ,rgb(0,170,170), rgb(180,90,255));
+  --gradient-secondary: linear-gradient(135deg, rgb(198, 144, 242),rgb(180,90,255), rgb(255,40,180));
+  --gradient-accent: linear-gradient(90deg, rgb(0,170,170), rgb(255,40,180));
   --shadow-glow: 0 0 40px rgb(0,190,190,0.4);
   --shadow-glow-purple: 0 0 40px rgb(160,120,255,0.4);
   --shadow-glow-magenta: 0 0 40px rgb(240,60,200,0.4);
@@ -100,8 +100,8 @@
   --glow-cyan: rgb(0,170,170);
   --glow-purple: rgb(180,90,255);
   --glow-magenta: rgb(255,40,180);
-  --gradient-primary: linear-gradient(135deg, rgb(0,170,170), rgb(180,90,255));
-  --gradient-secondary: linear-gradient(135deg, rgb(180,90,255), rgb(255,40,180));
+  --gradient-primary: linear-gradient(135deg,rgb(75, 252, 252) ,rgb(0,170,170), rgb(180,90,255));
+  --gradient-secondary: linear-gradient(135deg, rgb(198, 144, 242),rgb(180,90,255), rgb(255,40,180));
   --gradient-accent: linear-gradient(90deg, rgb(0,170,170), rgb(255,40,180));
   --shadow-glow: 0 0 40px rgb(0,170,170,0.4);
   --shadow-glow-purple: 0 0 40px rgb(180,90,255,0.4);
