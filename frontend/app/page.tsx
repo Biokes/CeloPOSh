@@ -153,7 +153,7 @@ const FAQ = () => (
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="glass p-8 rounded-2xl text-center"
+          className="glass p-8 rounded-2xl text-center border-gradient-primary border-[1px]"
         >
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/20 flex items-center justify-center glow-cyan">
             <Zap className="h-8 w-8 text-primary" />
@@ -170,8 +170,8 @@ const FAQ = () => (
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="glass p-8 rounded-2xl text-center"
-        >
+          className="glass p-8 rounded-2xl text-center border-gradient-primary border-[1px]"
+          >
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-secondary/20 flex items-center justify-center glow-purple">
             <Trophy className="h-8 w-8 text-secondary" />
           </div>
@@ -186,7 +186,7 @@ const FAQ = () => (
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="glass p-8 rounded-2xl text-center"
+          className="glass p-8 rounded-2xl text-center border-gradient-primary border-[1px]"
         >
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-accent/20 flex items-center justify-center glow-magenta">
             <Users className="h-8 w-8 text-accent" />
@@ -205,11 +205,9 @@ export default function Home() {
 
   return (
     <>
-      {/* <Navbar /> */}
       <Hero />
       <TopGames />
       <FAQ />
-      {/* <Footer /> */}
     </>
   )
 }
