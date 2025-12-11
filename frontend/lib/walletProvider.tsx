@@ -1,29 +1,11 @@
 'use client'
 import { wagmiAdapter } from './utils'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-// import { createAppKit } from '@reown/appkit/react'
-// import { baseSepolia, base } from '@reown/appkit/networks'
 import { cookieToInitialState, WagmiProvider, type Config } from 'wagmi'
 
 const queryClient = new QueryClient()
 
-
-// const metadata = {
-//   name: 'appkit-example',
-//   description: 'AppKit Example',
-//   url: 'https://appkitexampleapp.com',
-//   icons: ['https://avatars.githubusercontent.com/u/179229932']
-// }
-
-// const modal = createAppKit({
-//   adapters: [wagmiAdapter],
-//   projectId: process.env.NEXT_PROJECT_ID!,
-//   networks: [base, baseSepolia],
-//   defaultNetwork: baseSepolia,
-//   metadata: metadata,
-// })
-
-function WalletProvider({ children, cookies }: { children: React.ReactNode; cookies: string | null }) {
+export function WalletProvider({ children, cookies }: { children: React.ReactNode; cookies: string | null }) {
   const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
 
   return (
@@ -34,5 +16,3 @@ function WalletProvider({ children, cookies }: { children: React.ReactNode; cook
     </WagmiProvider>
   )
 }
-
-export default WalletProvider;
