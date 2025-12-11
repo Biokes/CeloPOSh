@@ -1,21 +1,37 @@
-"use client";
+'use client'
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { WagmiProvider } from "wagmi";
-import { RainbowKitProvider, lightTheme } from '@rainbow-me/rainbowkit';
-import { config } from "./utils";
+import { wagmiAdapter } from './utils'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { createAppKit } from '@reown/appkit/react'
+import { baseSepolia, base } from '@reown/appkit/networks'
+import { cookieToInitialState, WagmiProvider, type Config } from 'wagmi'
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient()
 
-export default function WalletProvider({ children }: {children: React.ReactNode}) { 
-    return (
-        <WagmiProvider config={config}>
-            <QueryClientProvider client={queryClient}>
-              <RainbowKitProvider coolMode
-                theme={lightTheme({ accentColor: '#045d67', accentColorForeground: 'white' })}> 
-                {children}
-            </RainbowKitProvider>
-          </QueryClientProvider>
-        </WagmiProvider> 
-    )
+
+const metadata = {
+  name: 'appkit-example',
+  description: 'AppKit Example',
+  url: 'https://appkitexampleapp.com',
+  icons: ['https://avatars.githubusercontent.com/u/179229932']
 }
+
+const modal = createAppKit({
+  adapters: [wagmiAdapter],
+  projectId: "project id",
+  networks: [base, baseSepolia],
+  defaultNetwork: baseSepolia,
+  metadata: metadata,
+})
+
+function WalletProvider({ children, cookies }: { children: React.ReactNode; cookies: string | null }) {
+  const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
+
+  return (
+    <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </WagmiProvider>
+  )
+}
+
+export default WalletProvider;
