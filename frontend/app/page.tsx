@@ -1,7 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import { Zap, Trophy, Users } from "lucide-react";
-import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 function Hero() {
   return (
     <main className='hero'>
@@ -24,7 +25,9 @@ function Hero() {
     </main>
   )
 }
-const TopGames = () => (
+const TopGames = () => {
+  const router = useRouter();
+  return (
   <section className='w-full px-2 pt-4'>
     <p className='text-gradient ribeye text-[1.5rem] pl-[40px] text-start'>Top Games</p>
 
@@ -40,7 +43,7 @@ const TopGames = () => (
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
         <motion.button
-          onClick={() => { toast.info("Please connect wallet"); }}
+          onClick={() => {router.push('/pong') }}
           whileHover={{ scale: 1.1 }}
           transition={{ duration: 0.2 }}
           className='relative z-10 h-[30px] rounded-sm bg-black px-2 ml-5 mb-2 text-glow-cyan ribeye transition-all'
@@ -132,8 +135,8 @@ const TopGames = () => (
       </div>
     </article>
   </section>
-
-)
+  )
+}
 const FAQ = () => (
   <section className="py-20 px-4 bg-gradient-to-b from-transparent to-card/50">
     <div className="max-w-7xl mx-auto">

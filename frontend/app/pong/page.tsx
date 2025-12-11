@@ -1,7 +1,8 @@
 "use client";
+import PongPage from "@/pages/pongPage";
 
-export default function PongPage() { 
+export default function Pong() { 
     return (
-        <Pong />
-    );
+        <PongPage/>
+        );
 }
