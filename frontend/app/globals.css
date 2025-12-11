@@ -100,9 +100,12 @@
   --glow-cyan: rgb(0,170,170);
   --glow-purple: rgb(180,90,255);
   --glow-magenta: rgb(255,40,180);
-  --gradient-primary: linear-gradient(135deg,rgb(75, 252, 252) ,rgb(0, 195, 255),rgb(255, 24, 186), rgb(110, 5, 122));
+  --gradient-primary: linear-gradient(135deg, hsl(180 100% 50%), hsl(280 100% 60%));
+  --gradient-secondary: linear-gradient(135deg, hsl(280 100% 60%), hsl(320 100% 50%));
+  --gradient-accent: linear-gradient(90deg, hsl(180 100% 50%), hsl(320 100% 50%));
+  /* --gradient-primary: linear-gradient(135deg,rgb(75, 252, 252) ,rgb(0, 195, 255),rgb(144, 67, 156), rgb(55, 3, 61));
   --gradient-secondary: linear-gradient(135deg, rgb(198, 144, 242),rgb(180,90,255), rgb(255,40,180));
-  --gradient-accent: linear-gradient(90deg, rgb(0,170,170), rgb(255,40,180));
+  --gradient-accent: linear-gradient(90deg, rgb(0,170,170), rgb(255,40,180)); */
   --shadow-glow: 0 0 40px rgb(0,170,170,0.4);
   --shadow-glow-purple: 0 0 40px rgb(180,90,255,0.4);
   --shadow-glow-magenta: 0 0 40px rgb(255,40,180,0.4);
@@ -163,6 +166,12 @@
 .ribeye{
   font-family: "Ribeye";
 }
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--gradient-primary);
+}
+
 .hero_bold{
   font-family: "Orbitron", cursive;
     font-style: normal;
@@ -173,4 +182,23 @@
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
     background-clip: text;
+}
+.pong_hero {
+  @apply w-full min-h-[300px] min-h-[220px] flex justify-center items-center;
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 0.5) 60%,
+      rgba(16, 16, 17, 0.802) 80%
+    ),
+    url("/background3.jpeg");
+}
+.pong_hero > section {
+  @apply flex flex-wrap md:flex-row justify-around items-center gap-3 py-4 px-2 w-full md:px-12;
+}
+.pong_hero > section > article {
+  @apply flex flex-col justify-center items-center h-[90px] sm:h-[120px] sm:text-[1rem] text-primary w-[50%] sm:w-[22%] 
+  transform transition-all duration-300 max-w-[160px] sm:max-w-[350px] bg-[#0B0B0E] md:max-w-[450px] rounded-sm sm:px-5
+  group-hover:scale-[1.2] text-center;
+  border: 1px solid #ffc05b;
+  cursor: pointer;
+  font-family: "ribeye";
 }
