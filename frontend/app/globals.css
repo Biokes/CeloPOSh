@@ -263,3 +263,7 @@
   @apply flex flex-grow p-2 overflow-y-auto rounded-b-lg;
   border: 1px solid #f8b141;
 }
+.leadersBoard {
+  @apply min-h-[350px] flex w-full max-h-[450px] p-2 flex-col border-[2px] border-primary rounded-lg
+  sm:max-w-[350px] lg:max-w-[400px];
+}
