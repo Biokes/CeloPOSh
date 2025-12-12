@@ -3,7 +3,80 @@ import { useState } from "react"
 
 
 const LeadersBoard = () => {
-    const [players] = useState<PlayerStat[]>([])
+    const [players] = useState<PlayerStat[]>([
+        {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+        {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+        {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+        {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+         {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+        {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+        {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+        {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+         {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+        {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+        {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+        {
+            walletAddress: "123456789009876543123456789",
+            avatarURL: "https://laosupdjwdndq.com",
+            username: "string",
+            ratings: 10,
+        },
+    ])
 
     return (
         <div className="leadersBoard">
@@ -14,7 +87,7 @@ const LeadersBoard = () => {
                         <h3> No Records currently</h3>
                     </span>
                     :
-                    <div>
+                    <div className="!justify-start !items-center">
                         {
                             players.map((player, index) => (
                                 <li key={index}>
