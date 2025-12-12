@@ -253,3 +253,6 @@
 .boostpack-hover {
   @apply transition-all duration-300 ease-in-out;
 }
+.boostpack-active {
+  @apply bg-amber-400 bg-opacity-10;
+}
