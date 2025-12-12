@@ -216,8 +216,9 @@
   cursor: pointer;
   font-family: "ribeye";
 }
-
-/* Boostpack Styles - Commit 1 */
 .boostpack {
   @apply flex flex-col sm:flex-col rounded-lg border-primary border-[2px] mx-5 p-5 mt-3;
+}
+.boostpack > div {
+  @apply flex flex-col sm:flex-row justify-between items-center gap-3 py-3;
 }
