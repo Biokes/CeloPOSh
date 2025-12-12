@@ -228,5 +228,6 @@
   cursor: pointer;
   & h5 {
     @apply text-[1.3rem] text-amber-400 text-nowrap;
+    font-family: "ribeye";
   }
 }
