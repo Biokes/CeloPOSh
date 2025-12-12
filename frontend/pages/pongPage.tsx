@@ -1,4 +1,4 @@
-import Navbar from "@/components/commons/navbar";
+import Navbar from "@/components/cmm ons/navbar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -50,7 +50,7 @@ export default function PongPage() {
     
 
     return (
-        <main>
+        <main className="w-full">
             <Navbar />
              <div className='pong_hero'>
                 <section>

@@ -217,7 +217,7 @@
   font-family: "ribeye";
 }
 .boostpack {
-  @apply flex flex-col sm:flex-col rounded-lg border-primary border-[2px] mx-5 p-5 mt-3;
+  @apply flex flex-col sm:flex-col rounded-lg border-primary border-[2px] mx-5 py-2 px-5 mt-3;
 }
 .boostpack > div {
   @apply flex flex-col sm:flex-row justify-between items-center gap-3 py-3;
@@ -241,7 +241,7 @@
   }
 }
 .boostpack > nav {
-  @apply flex justify-between items-center pt-3 pb-5;
+  @apply flex justify-between items-center pt-2 pb-3;
 }
 .boostpack > nav > h5 {
   @apply capitalize text-amber-400 text-2xl;
