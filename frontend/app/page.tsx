@@ -1,7 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import { Zap, Trophy, Users } from "lucide-react";
-import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
 function Hero() {
   return (
     <main className='hero'>
@@ -19,12 +20,14 @@ function Hero() {
           </span>
           <br /> Join the on-chain gaming revolution.
         </p>
-        <button >Get Started</button>
+        <button className="glass">Get Started</button>
       </motion.article>
     </main>
   )
 }
-const TopGames = () => (
+const TopGames = () => {
+  const router = useRouter();
+  return (
   <section className='w-full px-2 pt-4'>
     <p className='text-gradient ribeye text-[1.5rem] pl-[40px] text-start'>Top Games</p>
 
@@ -40,7 +43,7 @@ const TopGames = () => (
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
         <motion.button
-          onClick={() => { toast.info("Please connect wallet"); }}
+          onClick={() => {router.push('/pong') }}
           whileHover={{ scale: 1.1 }}
           transition={{ duration: 0.2 }}
           className='relative z-10 h-[30px] rounded-sm bg-black px-2 ml-5 mb-2 text-glow-cyan ribeye transition-all'
@@ -132,8 +135,8 @@ const TopGames = () => (
       </div>
     </article>
   </section>
-
-)
+  )
+}
 const FAQ = () => (
   <section className="py-20 px-4 bg-gradient-to-b from-transparent to-card/50">
     <div className="max-w-7xl mx-auto">
@@ -153,7 +156,7 @@ const FAQ = () => (
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="glass p-8 rounded-2xl text-center"
+          className="glass p-8 rounded-2xl text-center border-gradient-primary border-[1px]"
         >
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/20 flex items-center justify-center glow-cyan">
             <Zap className="h-8 w-8 text-primary" />
@@ -170,8 +173,8 @@ const FAQ = () => (
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="glass p-8 rounded-2xl text-center"
-        >
+          className="glass p-8 rounded-2xl text-center border-gradient-primary border-[1px]"
+          >
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-secondary/20 flex items-center justify-center glow-purple">
             <Trophy className="h-8 w-8 text-secondary" />
           </div>
@@ -186,7 +189,7 @@ const FAQ = () => (
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="glass p-8 rounded-2xl text-center"
+          className="glass p-8 rounded-2xl text-center border-gradient-primary border-[1px]"
         >
           <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-accent/20 flex items-center justify-center glow-magenta">
             <Users className="h-8 w-8 text-accent" />
@@ -205,11 +208,9 @@ export default function Home() {
 
   return (
     <>
-      {/* <Navbar /> */}
       <Hero />
       <TopGames />
       <FAQ />
-      {/* <Footer /> */}
     </>
   )
 }

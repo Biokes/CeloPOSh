@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/themeProvider";
+import { headers } from 'next/headers';
+import WalletProvider from "@/lib/walletProvider";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,21 +21,21 @@ export const metadata: Metadata = {
   description: "Games for all, all for games",
 };
 
-export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const headersObj = await headers()
+  const cookies = headersObj.get('cookie')
+  
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-         <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-        >  
-        <div className="body">
-        {children}
-        </div> 
-          </ThemeProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange >
+          <WalletProvider cookies={cookies}>
+            <div className="body">
+              {children}
+            </div>
+          </WalletProvider>
+        </ThemeProvider>
       </body>
-    </html>
+    </html >
   );
 }
