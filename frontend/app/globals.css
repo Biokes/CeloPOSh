@@ -301,3 +301,8 @@
 .howToPlay > div {
   @apply flex flex-col gap-2;
 }
+.howToPlay> div> p{
+  @apply text-start rounded w-full p-1;
+    border: 1px solid #f8b141;
+    font-family: "ribeye";
+}
