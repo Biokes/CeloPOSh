@@ -275,3 +275,7 @@
   @apply list-none flex items-center gap-2 px-2 my-[2px] py-1 border-[#00FBFA] border-[2px] rounded-[5px] w-full;
   border: 1px solid #f8b141;
 }
+.leadersBoard :is(div) {
+  @apply flex flex-col justify-start items-start rounded-b-lg w-full;
+    border: 1px solid #f8b141;
+}
