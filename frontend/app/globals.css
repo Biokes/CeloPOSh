@@ -259,3 +259,6 @@
 .boostpack-content {
   @apply space-y-2 flex flex-col;
 }
+.boostpack-icon {
+  @apply text-amber-400 text-lg;
+}
