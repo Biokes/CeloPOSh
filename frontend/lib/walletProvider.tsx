@@ -10,13 +10,13 @@ const queryClient = new QueryClient()
 
 
 const metadata = {
-  name: 'appkit-example',
-  description: 'AppKit Example',
-  url: 'https://appkitexampleapp.com',
+  name: 'Chainskill Games',
+  description: 'Games for all , all for Games',
+  url: 'https://chainskills-mauve.vercel.app',
   icons: ['https://avatars.githubusercontent.com/u/179229932']
 }
 
-const modal = createAppKit({
+createAppKit({
   adapters: [wagmiAdapter],
   projectId: process.env.NEXT_PROJECT_ID!,
   networks: [base, baseSepolia],
