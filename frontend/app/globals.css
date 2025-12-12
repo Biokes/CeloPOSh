@@ -286,3 +286,6 @@
   @apply flex items-center gap-2 w-full text-[1rem] ;
     font-family: "ribeye";
 }
+.leadersBoard > div > li{
+  @apply flex justify-between gap-[60px];
+}
