@@ -251,3 +251,7 @@
   @apply min-h-[350px] flex w-full max-h-[450px] p-2 overflow-y-auto flex-col border-[2px] border-primary rounded-lg
   sm:max-w-[450px] lg:max-w-[550px] w-full;
 }
+.livegames > header {
+  @apply text-amber-400 text-3xl font-bold text-start rounded p-2 text-nowrap;
+  font-family: "ribeye";
+}
