@@ -255,3 +255,7 @@
   @apply text-amber-400 text-3xl font-bold text-start rounded p-2 text-nowrap;
   font-family: "ribeye";
 }
+.livegames > :nth-child(2){
+  @apply flex flex-grow text-center justify-center items-center overflow-y-auto rounded-b-lg;
+  border: 1px solid #f8b141;
+}
