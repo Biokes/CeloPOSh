@@ -250,3 +250,6 @@
 .boostpack-dark {
   @apply flex flex-col sm:flex-col rounded-lg border-primary border-[2px] mx-5 p-5 mt-3;
 }
+.boostpack-hover {
+  @apply transition-all duration-300 ease-in-out;
+}
