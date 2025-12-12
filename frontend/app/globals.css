@@ -247,27 +247,3 @@
   @apply capitalize text-amber-400 text-2xl;
   font-family: "ribeye";
 }
-.boostpack-dark {
-  @apply flex flex-col sm:flex-col rounded-lg border-primary border-[2px] mx-5 p-5 mt-3;
-}
-.boostpack-hover {
-  @apply transition-all duration-300 ease-in-out;
-}
-.boostpack-active {
-  @apply bg-amber-400 bg-opacity-10;
-}
-.boostpack-content {
-  @apply space-y-2 flex flex-col;
-}
-.boostpack-icon {
-  @apply text-amber-400 text-lg;
-}
-.boostpack-title {
-  @apply font-bold text-amber-400;
-}
-.boostpack-description {
-  @apply text-sm text-gray-300;
-}
-.boostpack-footer {
-  @apply flex justify-end pt-4;
-}
