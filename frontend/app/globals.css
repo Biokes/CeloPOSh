@@ -294,3 +294,7 @@
   @apply min-h-[350px] flex w-full max-h-[450px] p-2 overflow-y-auto flex-col border-[2px] border-primary rounded-lg
   sm:max-w-[350px] lg:max-w-[400px] w-full;
 }
+.howToPlay > header {
+  @apply text-amber-400 text-2xl font-bold text-start rounded p-2 text-nowrap;
+  font-family: "ribeye";
+}
