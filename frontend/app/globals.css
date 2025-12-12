@@ -243,3 +243,7 @@
 .boostpack > nav {
   @apply flex justify-between items-center pt-3 pb-5;
 }
+.boostpack > nav > h5 {
+  @apply capitalize text-amber-400 text-2xl;
+  font-family: "ribeye";
+}
