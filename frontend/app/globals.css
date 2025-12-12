@@ -233,4 +233,7 @@
   & p {
     @apply text-xs lg:text-[0.9rem] text-start;
   }
+  & span {
+    @apply text-2xl font-thin;
+  }
 }
