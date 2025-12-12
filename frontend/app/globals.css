@@ -282,3 +282,7 @@
 .leadersBoard :is(li){
   @apply list-none flex items-start justify-end w-full;
 }
+.leadersBoard :is(li) :is(p) {
+  @apply flex items-center gap-2 w-full text-[1rem] ;
+    font-family: "ribeye";
+}
