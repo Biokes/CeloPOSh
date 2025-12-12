@@ -226,4 +226,7 @@
   @apply flex flex-col items-start justify-between rounded-sm p-2 w-full h-[100px];
   border: 1px solid #f8b141;
   cursor: pointer;
+  & h5 {
+    @apply text-[1.3rem] text-amber-400 text-nowrap;
+  }
 }
