@@ -306,3 +306,9 @@
     border: 1px solid #f8b141;
     font-family: "ribeye";
 }
+.bottomCard {
+  @apply flex flex-col md:flex-row gap-2 py-2 px-4 justify-between items-center w-full;
+}
+.bottomCard > aside {
+  @apply flex flex-col md:flex-row w-full md:gap-2 sm:max-w-[65%];
+}
