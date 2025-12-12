@@ -259,3 +259,7 @@
   @apply flex flex-grow text-center justify-center items-center overflow-y-auto rounded-b-lg;
   border: 1px solid #f8b141;
 }
+.leadersBoard > :nth-child(2), .howToPlay> div {
+  @apply flex flex-grow p-2 overflow-y-auto rounded-b-lg;
+  border: 1px solid #f8b141;
+}
