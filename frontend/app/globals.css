@@ -268,3 +268,6 @@
 .boostpack-description {
   @apply text-sm text-gray-300;
 }
+.boostpack-footer {
+  @apply flex justify-end pt-4;
+}
