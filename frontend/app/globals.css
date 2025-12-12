@@ -298,3 +298,6 @@
   @apply text-amber-400 text-2xl font-bold text-start rounded p-2 text-nowrap;
   font-family: "ribeye";
 }
+.howToPlay > div {
+  @apply flex flex-col gap-2;
+}
