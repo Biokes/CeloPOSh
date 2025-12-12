@@ -222,3 +222,7 @@
 .boostpack > div {
   @apply flex flex-col sm:flex-row justify-between items-center gap-3 py-3;
 }
+.boostpack > div > article {
+  @apply flex flex-col items-start justify-between rounded-sm p-2 w-full h-[100px];
+  border: 1px solid #f8b141;
+}
