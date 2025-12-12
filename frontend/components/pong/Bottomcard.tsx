@@ -3,7 +3,7 @@ import { useState } from "react"
 
 
 const LeadersBoard = () => {
-    const [players, setPlayers] = useState<PlayerStat[]>([])
+    const [players] = useState<PlayerStat[]>([])
 
     return (
         <div className="leadersBoard">

@@ -247,3 +247,7 @@
   @apply capitalize text-amber-400 text-2xl;
   font-family: "ribeye";
 }
+.livegames {
+  @apply min-h-[350px] flex w-full max-h-[450px] p-2 overflow-y-auto flex-col border-[2px] border-primary rounded-lg
+  sm:max-w-[450px] lg:max-w-[550px] w-full;
+}
