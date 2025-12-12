@@ -240,3 +240,6 @@
     @appply font-thin text-sm;
   }
 }
+.boostpack > nav {
+  @apply flex justify-between items-center pt-3 pb-5;
+}
