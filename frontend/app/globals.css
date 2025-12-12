@@ -279,3 +279,6 @@
   @apply flex flex-col justify-start items-start rounded-b-lg w-full;
     border: 1px solid #f8b141;
 }
+.leadersBoard :is(li){
+  @apply list-none flex items-start justify-end w-full;
+}
