@@ -230,4 +230,7 @@
     @apply text-[1.3rem] text-amber-400 text-nowrap;
     font-family: "ribeye";
   }
+  & p {
+    @apply text-xs lg:text-[0.9rem] text-start;
+  }
 }
