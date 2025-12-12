@@ -236,4 +236,7 @@
   & span {
     @apply text-2xl font-thin;
   }
+  & h6 {
+    @appply font-thin text-sm;
+  }
 }
