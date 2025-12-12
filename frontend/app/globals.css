@@ -262,3 +262,6 @@
 .boostpack-icon {
   @apply text-amber-400 text-lg;
 }
+.boostpack-title {
+  @apply font-bold text-amber-400;
+}
