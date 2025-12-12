@@ -265,3 +265,6 @@
 .boostpack-title {
   @apply font-bold text-amber-400;
 }
+.boostpack-description {
+  @apply text-sm text-gray-300;
+}
