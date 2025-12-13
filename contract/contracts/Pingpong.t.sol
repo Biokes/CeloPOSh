@@ -3,7 +3,7 @@ pragma solidity ^0.8.28;
 
 import {Test} from "forge-std/Test.sol";
 import {PingPong} from "./PingPong.sol";
-import {console} from "forge-std/Console.sol";
+import {console} from "forge-std/console.sol";
 
 contract PingpongTest is Test{
     PingPong pong;
