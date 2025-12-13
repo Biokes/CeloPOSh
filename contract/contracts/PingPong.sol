@@ -2,16 +2,26 @@
 pragma solidity ^0.8.28;
 
 contract PingPong{
+
+    mapping (address => Game) games;
+
     enum GameStatus{
-        DEFAULT, ACTIVE, ENDED,CANCELLED,PAID,PENDING
+        DEFAULT,
+        ACTIVE,
+        ENDED,
+        CANCELLED,
+        PAID,
+        PENDING
     }
+    
+
     struct Game{
         GameStatus status;
         uint price;
         address creator;
     }
     
-    function createNewGame(uint _price)external{
+    function createNewGame(uint _price) external {
         Game memory game = Game({
             status: GameStatus.PENDING,
             price: _price,
@@ -19,4 +29,5 @@ contract PingPong{
         });
         
     }
+
 }
