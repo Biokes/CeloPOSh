@@ -2,20 +2,21 @@
 pragma solidity ^0.8.28;
 
 import {Test} from "forge-std/Test.sol";
-import {Pingpong} from "./PingPong.sol";
-
+import {PingPong} from "./PingPong.sol";
+import {console} from "forge-std/Console.sol";
 
 contract PingpongTest is Test{
     PingPong pong;
-
+    address deployer = address(1);
     function setUp() public {
-        pong = new Pong();
+        pong = new PingPong();
     }
 
     function testGameCanBeCreated() public{
-        address user = address(1);
-        pong.createNewGame(user,0);
-        assert(pong.getUserActiveGame(user) ==0,"invalid assertion");
+        address user = address(2);
+        vm.startPrank(user);
+        pong.createNewGame(0);
+        assert(pong.getUserActiveGame(user).length ==0,"invalid assertion");
     }
 
 }
