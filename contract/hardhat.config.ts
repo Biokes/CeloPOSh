@@ -31,7 +31,7 @@ export default defineConfig({
     base: {
       type: "http",
       chainType: "l1",
-      url: "",
+      url: "https://mainnet.base.org",
       accounts: [configVariable("BASE_PRIVATE_KEY")],
     },
   },

@@ -11,4 +11,11 @@ contract PingpongTest is Test{
     function setUp() public {
         pong = new Pong();
     }
+
+    function testGameCanBeCreated() public{
+        address user = address(1);
+        pong.createNewGame(user,0);
+        assert(pong.getUserActiveGame(user) ==0,"invalid assertion");
+    }
+
 }
