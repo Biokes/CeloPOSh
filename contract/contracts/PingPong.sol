@@ -3,7 +3,7 @@ pragma solidity ^0.8.28;
 
 contract PingPong{
 
-    mapping (address => Game) games;
+    mapping (address => Game[]) games;
 
     enum GameStatus{
         DEFAULT,
@@ -27,7 +27,11 @@ contract PingPong{
             price: _price,
             creator: msg.sender
         });
-        
+        games[msg.sender].push(game);
     }
 
+    function getActiveUserGame(address user) external (uint) {
+        return games[user].length;
+    }
+    
 }
