@@ -126,18 +126,14 @@ contract PingPong is ReentrancyGuard, Ownable {
         _;
     }
 
-    // ============ Constructor ============
-    constructor() {
+    constructor() Ownable(msg.sender) {
         totalGames = 0;
         paused = false;
     }
 
-    // ============ Game Management ============
     function createGame() external payable notPaused nonReentrant {
         if (msg.value == 0) revert InvalidAmount();
-
         uint64 gameId = ++totalGames;
-
         games[gameId] = GameSession({
             gameId: gameId,
             player1: msg.sender,
