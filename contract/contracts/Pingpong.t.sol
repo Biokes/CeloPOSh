@@ -5,4 +5,10 @@ import {Test} from "forge-std/Test.sol";
 import {Pingpong} from "./PingPong.sol";
 
 
-contract PingpongTest is Test{}
+contract PingpongTest is Test{
+    PingPong pong;
+
+    function setUp() public {
+        pong = new Pong();
+    }
+}
