@@ -16,7 +16,7 @@ contract PingpongTest is Test{
         address user = address(2);
         vm.startPrank(user);
         pong.createNewGame(0);
-        assert(pong.getUserActiveGame(user).length ==0,"invalid assertion");
+        assert(pong.getUserGames(user).length ==0,"invalid assertion");
     }
 
 }
