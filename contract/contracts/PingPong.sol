@@ -30,7 +30,7 @@ contract PingPong{
         games[msg.sender].push(game);
     }
 
-    function getUserGames(address user) external returns(Game[]) {
+    function getUserGames(address user) external returns(Game[] memory) {
         return games[user];
     }
     
