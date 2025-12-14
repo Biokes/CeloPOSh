@@ -1730,5 +1730,66 @@ contract PingPongTest is Test {
         assertEq(pong.getGameEscrow(1), 0);
     }
 
+    function testTimeoutRefundWaitingGameFullRefund() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.warp(block.timestamp + TIMEOUT + 1);
+        
+        uint256 balanceBefore = alice.balance;
+        vm.prank(alice);
+        pong.claimTimeoutRefund(1);
+        
+        assertEq(alice.balance - balanceBefore, STAKE);
+    }
+
+    function testTimeoutRefundActiveGameBothPlayers() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        vm.warp(block.timestamp + TIMEOUT + 1);
+        
+        uint256 aliceBalBefore = alice.balance;
+        uint256 bobBalBefore = bob.balance;
+        
+        vm.prank(alice);
+        pong.claimTimeoutRefund(1);
+        
+        assertEq(alice.balance - aliceBalBefore, STAKE);
+        assertEq(bob.balance - bobBalBefore, STAKE);
+    }
+
+    function testGameExistenceCheck() public {
+        assertFalse(pong.isGameExists(1));
+        
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        assertTrue(pong.isGameExists(1));
+    }
+
+    function testPlayerGameCount() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        assertEq(pong.getPlayerGameCount(alice), 2);
+    }
+
+    function testGameDataRetrieval() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        PingPong.GameSession memory game = pong.getGame(1);
+        assertEq(game.player1, alice);
+        assertEq(game.stakeAmount, STAKE);
+        assertEq(game.status, 1);
+    }
+
     receive() external payable {}
 }
