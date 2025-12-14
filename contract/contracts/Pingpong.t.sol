@@ -2674,6 +2674,11 @@ contract PingPongTest is Test {
         pong.createGame{value: STAKE}();
 
         vm.prank(bob);
+        vm.expectRevert(PingPong.Unauthorized.selector);
+        pong.requestRefund(1);
+    }
+
+    function testMultipleGameRefunds() public {
 
     receive() external payable {}
 }
