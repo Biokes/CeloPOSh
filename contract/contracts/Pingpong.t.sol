@@ -2246,5 +2246,64 @@ contract PingPongTest is Test {
         assertEq(pong.getTotalGames(), 3);
     }
 
+    function testDevFeePercentageCorrect() public {
+        vm.prank(alice);
+        pong.createGame{value: 100 ether}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: 100 ether}(1);
+        
+        pong.endGame(1, alice);
+        
+        uint256 expectedFee = (200 ether * 5) / 100;
+        assertEq(pong.getDevFees(), expectedFee);
+    }
+
+    function testGameStatusAfterRefund() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(alice);
+        pong.requestRefund(1);
+        
+        uint256 status = pong.getGameStatus(1);
+        assertEq(status, 4);
+    }
+
+    function testPowerupTypesIndependent() public {
+        pong.grantPowerup(alice, 1);
+        pong.grantPowerup(alice, 2);
+        
+        assertEq(pong.getPowerupCount(alice, 1), 1);
+        assertEq(pong.getPowerupCount(alice, 2), 1);
+        assertEq(pong.getPowerupCount(alice, 3), 0);
+    }
+
+    function testGameJoinWithCorrectStatus() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        assertEq(pong.getGameStatus(1), 1);
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        assertEq(pong.getGameStatus(1), 2);
+    }
+
+    function testMultipleGameEndings() public {
+        for (uint256 i = 1; i <= 5; i++) {
+            vm.prank(alice);
+            pong.createGame{value: STAKE}();
+            
+            vm.prank(bob);
+            pong.joinGame{value: STAKE}(i);
+            
+            pong.endGame(i, alice);
+            
+            assertEq(pong.getGameStatus(i), 3);
+        }
+    }
+
     receive() external payable {}
 }
