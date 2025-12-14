@@ -24,7 +24,7 @@ contract PingPong is ReentrancyGuard, Ownable {
 
     // ============ Custom Errors ============
     error GameplayPaused();
-    error InvalidAmount();
+    error InvalidAmount(); // Thrown when amount is zero or mismatched
     error Unauthorized();
     error Player2SlotNotEmpty();
     error CannotJoinOwnGame();
