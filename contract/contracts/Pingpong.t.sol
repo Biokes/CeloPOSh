@@ -1374,5 +1374,13 @@ contract PingPongTest is Test {
         assertEq(pong.getGameEscrow(1), 0.001 ether);
     }
 
+    function testCreateGameWithLargeStake() public {
+        vm.prank(alice);
+        pong.createGame{value: 100 ether}();
+        
+        assertEq(pong.getTotalGames(), 1);
+        assertEq(pong.getGameEscrow(1), 100 ether);
+    }
+
     receive() external payable {}
 }
