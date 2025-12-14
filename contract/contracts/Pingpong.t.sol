@@ -2363,5 +2363,56 @@ contract PingPongTest is Test {
         assertEq(pong.getTotalGames(), countBefore + 1);
     }
 
+    function testGameCreationEscrowVerification() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        uint256 escrow = pong.getGameEscrow(1);
+        assertEq(escrow, STAKE);
+    }
+
+    function testGameJoinEscrowAddition() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        uint256 escrowBefore = pong.getGameEscrow(1);
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        uint256 escrowAfter = pong.getGameEscrow(1);
+        assertEq(escrowAfter, escrowBefore + STAKE);
+    }
+
+    function testRefundReducesEscrow() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(alice);
+        pong.requestRefund(1);
+        
+        assertEq(pong.getGameEscrow(1), 0);
+    }
+
+    function testTimeoutRefundCompletionStatus() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.warp(block.timestamp + TIMEOUT + 1);
+        
+        vm.prank(alice);
+        pong.claimTimeoutRefund(1);
+        
+        assertEq(pong.getGameStatus(1), 4);
+    }
+
+    function testPowerupMultipleGrants() public {
+        for (uint256 i = 0; i < 10; i++) {
+            pong.grantPowerup(alice, 1);
+        }
+        
+        assertEq(pong.getPowerupCount(alice, 1), 10);
+    }
+
     receive() external payable {}
 }
