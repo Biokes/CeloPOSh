@@ -1364,5 +1364,15 @@ contract PingPongTest is Test {
         assertEq(devFees, expectedTotalFees);
     }
 
+    // ============ ADDITIONAL GAME CREATION STRESS TESTS ============
+
+    function testCreateGameWithMinimumStake() public {
+        vm.prank(alice);
+        pong.createGame{value: 0.001 ether}();
+        
+        assertEq(pong.getTotalGames(), 1);
+        assertEq(pong.getGameEscrow(1), 0.001 ether);
+    }
+
     receive() external payable {}
 }
