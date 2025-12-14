@@ -1456,5 +1456,37 @@ contract PingPongTest is Test {
         assertEq(pong.getGameStatus(1), 2);
     }
 
+    function testEndGamePayoutCalculation() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        uint256 totalStake = STAKE * 2;
+        uint256 fee = (totalStake * 5) / 100;
+        uint256 expectedPayout = totalStake - fee;
+        
+        uint256 balanceBefore = alice.balance;
+        pong.endGame(1, alice);
+        
+        assertEq(alice.balance - balanceBefore, expectedPayout);
+    }
+
+    function testEndGameDevFeeAccumulation() public {
+        for (uint256 i = 0; i < 5; i++) {
+            vm.prank(alice);
+            pong.createGame{value: STAKE}();
+            
+            vm.prank(bob);
+            pong.joinGame{value: STAKE}(i + 1);
+            
+            pong.endGame(i + 1, alice);
+        }
+        
+        uint256 expectedFees = (5 * STAKE * 2 * 5) / 100;
+        assertEq(pong.getDevFees(), expectedFees);
+    }
+
     receive() external payable {}
 }
