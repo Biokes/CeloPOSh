@@ -1625,5 +1625,61 @@ contract PingPongTest is Test {
         assertEq(games.length, 3);
     }
 
+    function testGameCountIncrements() public {
+        assertEq(pong.getTotalGames(), 0);
+        
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        assertEq(pong.getTotalGames(), 1);
+        
+        vm.prank(bob);
+        pong.createGame{value: STAKE}();
+        assertEq(pong.getTotalGames(), 2);
+    }
+
+    function testJoinGameBothPlayersTracked() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        uint64[] memory aliceGames = pong.getPlayerGames(alice);
+        uint64[] memory bobGames = pong.getPlayerGames(bob);
+        
+        assertEq(aliceGames.length, 1);
+        assertEq(bobGames.length, 1);
+    }
+
+    function testMultipleGamesWithSamePlayer() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(carol);
+        pong.joinGame{value: STAKE}(2);
+        
+        uint64[] memory aliceGames = pong.getPlayerGames(alice);
+        assertEq(aliceGames.length, 2);
+    }
+
+    function testGameStatusProgression() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        assertEq(pong.getGameStatus(1), 1);
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        assertEq(pong.getGameStatus(1), 2);
+        
+        pong.endGame(1, alice);
+        assertEq(pong.getGameStatus(1), 3);
+    }
+
     receive() external payable {}
 }
