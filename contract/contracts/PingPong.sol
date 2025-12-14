@@ -41,16 +41,17 @@ contract PingPong is ReentrancyGuard, Ownable {
     error InvalidWinner();
     error PlayerGamesLimitExceeded();
 
+    // ============ Data Structures ============
     struct GameSession {
-        uint64 gameId;
-        address player1;
-        address player2;
-        uint256 stakeAmount;
-        uint256 escrowBalance;
-        uint8 status;
-        address winner;
-        uint64 createdAt;
-        uint64 completedAt;
+        uint64 gameId; // Unique game identifier
+        address player1; // First player
+        address player2; // Second player
+        uint256 stakeAmount; // Amount each player stakes
+        uint256 escrowBalance; // Total escrow held in contract
+        uint8 status; // Current game status
+        address winner; // Winner of the game
+        uint64 createdAt; // Game creation timestamp
+        uint64 completedAt; // Game completion timestamp
     }
 
     struct PowerupInventory {
