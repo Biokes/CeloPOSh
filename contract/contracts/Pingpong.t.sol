@@ -2706,6 +2706,11 @@ contract PingPongTest is Test {
     }
 
     function testPowerupUseOnBobPlayer() public {
+        pong.grantPowerup(bob, 2);
+        vm.prank(alice);
+
+        pong.createGame{value: STAKE}();
+    }
 
     receive() external payable {}
 }
