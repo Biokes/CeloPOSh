@@ -1382,5 +1382,15 @@ contract PingPongTest is Test {
         assertEq(pong.getGameEscrow(1), 100 ether);
     }
 
+    function testCreateGameTimestampRecorded() public {
+        uint256 beforeTime = block.timestamp;
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        uint256 afterTime = block.timestamp;
+        
+        PingPong.GameSession memory game = pong.getGame(1);
+        assertTrue(game.createdAt >= beforeTime && game.createdAt <= afterTime);
+    }
+
     receive() external payable {}
 }
