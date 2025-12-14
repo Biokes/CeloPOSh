@@ -22,6 +22,7 @@ contract PingPong is ReentrancyGuard, Ownable {
     uint256 private constant GAME_TIMEOUT = 7 days;
     uint256 private constant MAX_PLAYER_GAMES = 10000;
 
+    // ============ Custom Errors ============
     error GameplayPaused();
     error InvalidAmount();
     error Unauthorized();
