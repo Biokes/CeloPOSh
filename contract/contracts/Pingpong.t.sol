@@ -2697,6 +2697,10 @@ contract PingPongTest is Test {
     }
 
     function testPowerupMultipleTypes() public {
+        pong.grantPowerup(alice, 1);
+        pong.grantPowerup(bob, 2);
+
+        pong.grantPowerup(carol, 3);
 
     receive() external payable {}
 }
