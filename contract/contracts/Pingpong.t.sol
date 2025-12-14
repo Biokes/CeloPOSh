@@ -2470,5 +2470,58 @@ contract PingPongTest is Test {
         assertEq(pong.getGameStatus(1), 4);
     }
 
+    function testGameEndingTransfersWinnings() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        uint256 winnerBalBefore = alice.balance;
+        
+        pong.endGame(1, alice);
+        
+        uint256 winnerBalAfter = alice.balance;
+        assertTrue(winnerBalAfter > winnerBalBefore);
+    }
+
+    function testGameRefundValidation() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(alice);
+        pong.requestRefund(1);
+        
+        assertTrue(pong.isGameExists(1));
+    }
+
+    function testGameStateTransition() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        assertEq(pong.getGameStatus(1), 1);
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        assertEq(pong.getGameStatus(1), 2);
+        
+        pong.endGame(1, alice);
+        assertEq(pong.getGameStatus(1), 3);
+    }
+
+    function testGameDataConsistency() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        PingPong.GameSession memory game1 = pong.getGame(1);
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        PingPong.GameSession memory game2 = pong.getGame(1);
+        
+        assertEq(game1.player1, game2.player1);
+        assertEq(game1.stakeAmount, game2.stakeAmount);
+    }
+
     receive() external payable {}
 }
