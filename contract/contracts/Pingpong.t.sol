@@ -2523,5 +2523,71 @@ contract PingPongTest is Test {
         assertEq(game1.stakeAmount, game2.stakeAmount);
     }
 
+    function testGameCreationPlayerTracking() public {
+        address[] memory players = new address[](3);
+        players[0] = alice;
+        players[1] = bob;
+        players[2] = carol;
+        
+        for (uint256 i = 0; i < 3; i++) {
+            vm.prank(players[i]);
+            pong.createGame{value: STAKE}();
+        }
+        
+        PingPong.GameSession memory game1 = pong.getGame(1);
+        PingPong.GameSession memory game2 = pong.getGame(2);
+        PingPong.GameSession memory game3 = pong.getGame(3);
+        
+        assertEq(game1.player1, alice);
+        assertEq(game2.player1, bob);
+        assertEq(game3.player1, carol);
+    }
+
+    function testGameJoinPlayerAssignment() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        PingPong.GameSession memory game = pong.getGame(1);
+        assertEq(game.player1, alice);
+        assertEq(game.player2, bob);
+    }
+
+    function testRefundMultipleGamesConcurrent() public {
+        for (uint256 i = 0; i < 3; i++) {
+            vm.prank(alice);
+            pong.createGame{value: STAKE}();
+        }
+        
+        for (uint256 i = 1; i <= 3; i++) {
+            vm.prank(alice);
+            pong.requestRefund(i);
+        }
+        
+        for (uint256 i = 1; i <= 3; i++) {
+            assertEq(pong.getGameStatus(i), 4);
+        }
+    }
+
+    function testTimeoutRefundPrecisionMultiple() public {
+        for (uint256 i = 0; i < 3; i++) {
+            vm.prank(alice);
+            pong.createGame{value: STAKE}();
+        }
+        
+        vm.warp(block.timestamp + TIMEOUT + 1);
+        
+        for (uint256 i = 1; i <= 3; i++) {
+            vm.prank(alice);
+            pong.claimTimeoutRefund(i);
+        }
+        
+        for (uint256 i = 1; i <= 3; i++) {
+            assertEq(pong.getGameStatus(i), 4);
+        }
+    }
+
     receive() external payable {}
 }
