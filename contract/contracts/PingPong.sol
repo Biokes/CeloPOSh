@@ -1,30 +1,26 @@
 // SPDX-License-Identifier: MIT
-// PingPong Game Contract - Web3 Gaming Platform
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract PingPong is ReentrancyGuard, Ownable {
-    // ============ Game Status Constants ============
+
     uint8 private constant WAITING_STATUS = 1;
     uint8 private constant ACTIVE_STATUS = 2;
     uint8 private constant ENDED_STATUS = 3;
     uint8 private constant CANCELLED_STATUS = 4;
 
-    // ============ Powerup Type Constants ============
     uint8 private constant POWERUP_PAD_STRETCH = 1;
     uint8 private constant POWERUP_MULTIBALL = 2;
     uint8 private constant POWERUP_SHIELD = 3;
 
-    // ============ System Configuration Constants ============
     uint256 private constant DEV_FEE_PERCENTAGE = 5;
     uint256 private constant GAME_TIMEOUT = 7 days;
     uint256 private constant MAX_PLAYER_GAMES = 10000;
 
-    // ============ Custom Errors ============
     error GameplayPaused();
-    error InvalidAmount(); // Thrown when amount is zero or mismatched
+    error InvalidAmount();
     error Unauthorized();
     error Player2SlotNotEmpty();
     error CannotJoinOwnGame();
@@ -41,26 +37,24 @@ contract PingPong is ReentrancyGuard, Ownable {
     error InvalidWinner();
     error PlayerGamesLimitExceeded();
 
-    // ============ Data Structures ============
     struct GameSession {
-        uint64 gameId; // Unique game identifier
-        address player1; // First player
-        address player2; // Second player
-        uint256 stakeAmount; // Amount each player stakes
-        uint256 escrowBalance; // Total escrow held in contract
-        uint8 status; // Current game status
-        address winner; // Winner of the game
-        uint64 createdAt; // Game creation timestamp
-        uint64 completedAt; // Game completion timestamp
+        uint64 gameId;
+        address player1;
+        address player2;
+        uint256 stakeAmount;
+        uint256 escrowBalance;
+        uint8 status;
+        address winner;
+        uint64 createdAt;
+        uint64 completedAt;
     }
 
     struct PowerupInventory {
-        uint64 padStretchCount; // Count of pad stretch powerups
-        uint64 multiballCount; // Count of multiball powerups
-        uint64 shieldCount; // Count of shield powerups
+        uint64 padStretchCount;
+        uint64 multiballCount;
+        uint64 shieldCount;
     }
 
-    // ============ Events ============
     event GameCreated(
         uint64 indexed gameId,
         address indexed player1,
