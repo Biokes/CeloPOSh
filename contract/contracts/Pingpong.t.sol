@@ -2589,5 +2589,64 @@ contract PingPongTest is Test {
         }
     }
 
+    function testGameEndMultiplePlayers() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(carol);
+        pong.joinGame{value: STAKE}(1);
+        
+        vm.prank(alice);
+        pong.joinGame{value: STAKE}(2);
+        
+        pong.endGame(1, carol);
+        pong.endGame(2, alice);
+        
+        assertEq(pong.getGameStatus(1), 3);
+        assertEq(pong.getGameStatus(2), 3);
+    }
+
+    function testFeeAccumulationTracker() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        uint256 feeBefore = pong.getDevFees();
+        
+        pong.endGame(1, alice);
+        
+        uint256 feeAfter = pong.getDevFees();
+        assertGt(feeAfter, feeBefore);
+    }
+
+    function testPowerupInventoryIndependence() public {
+        pong.grantPowerup(alice, 1);
+        pong.grantPowerup(bob, 1);
+        
+        assertEq(pong.getPowerupCount(alice, 1), 1);
+        assertEq(pong.getPowerupCount(bob, 1), 1);
+        
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        vm.prank(alice);
+        pong.usePowerup(1, 1);
+        
+        assertEq(pong.getPowerupCount(alice, 1), 0);
+        assertEq(pong.getPowerupCount(bob, 1), 1);
+    }
+
+    function testCreateGameStakeTracking() public {
+        vm.prank(alice);
+        pong.createGame{value: 5 ether}();
+
     receive() external payable {}
 }
