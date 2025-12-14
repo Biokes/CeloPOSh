@@ -12,6 +12,7 @@ contract PingPong is ReentrancyGuard, Ownable {
     uint8 private constant ENDED_STATUS = 3;
     uint8 private constant CANCELLED_STATUS = 4;
 
+    // ============ Powerup Type Constants ============
     uint8 private constant POWERUP_PAD_STRETCH = 1;
     uint8 private constant POWERUP_MULTIBALL = 2;
     uint8 private constant POWERUP_SHIELD = 3;
