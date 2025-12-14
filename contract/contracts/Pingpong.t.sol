@@ -2661,6 +2661,10 @@ contract PingPongTest is Test {
     }
 
     function testEndGameFeeDistribution() public {
+        vm.prank(alice);
+        pong.createGame{value: 10 ether}();
+
+        vm.prank(bob);
 
     receive() external payable {}
 }
