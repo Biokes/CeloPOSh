@@ -2305,5 +2305,63 @@ contract PingPongTest is Test {
         }
     }
 
+    function testGamePlayerAssignment() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        PingPong.GameSession memory game = pong.getGame(1);
+        assertEq(game.player1, alice);
+        assertEq(game.player2, address(0));
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        game = pong.getGame(1);
+        assertEq(game.player2, bob);
+    }
+
+    function testGameRefundWaitingState() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        assertEq(pong.getGameStatus(1), 1);
+        
+        vm.prank(alice);
+        pong.requestRefund(1);
+        
+        assertEq(pong.getGameStatus(1), 4);
+    }
+
+    function testBalanceChangesOnGameEnd() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        uint256 aliceBalBefore = alice.balance;
+        pong.endGame(1, alice);
+        uint256 aliceBalAfter = alice.balance;
+        
+        assertGt(aliceBalAfter, aliceBalBefore);
+    }
+
+    function testPauseStateToggling() public {
+        for (uint256 i = 0; i < 3; i++) {
+            pong.togglePause();
+        }
+        
+        assertTrue(pong.isVaultPaused());
+    }
+
+    function testGameCounterIncrementAccuracy() public {
+        uint256 countBefore = pong.getTotalGames();
+        
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        assertEq(pong.getTotalGames(), countBefore + 1);
+    }
+
     receive() external payable {}
 }
