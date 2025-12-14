@@ -1923,5 +1923,70 @@ contract PingPongTest is Test {
         }
     }
 
+    function testGameCreationBalanceDeduction() public {
+        uint256 balanceBefore = alice.balance;
+        
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        uint256 balanceAfter = alice.balance;
+        assertEq(balanceBefore - balanceAfter, STAKE);
+    }
+
+    function testGameJoinBalanceDeduction() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        uint256 balanceBefore = bob.balance;
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        uint256 balanceAfter = bob.balance;
+        assertEq(balanceBefore - balanceAfter, STAKE);
+    }
+
+    function testRefundBalanceRestoration() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        uint256 balanceAfterCreation = alice.balance;
+        
+        vm.prank(alice);
+        pong.requestRefund(1);
+        
+        uint256 balanceAfterRefund = alice.balance;
+        assertEq(balanceAfterRefund - balanceAfterCreation, STAKE);
+    }
+
+    function testPowerupGrantingMultiplePlayers() public {
+        pong.grantPowerup(alice, 1);
+        pong.grantPowerup(alice, 1);
+        
+        pong.grantPowerup(bob, 1);
+        
+        assertEq(pong.getPowerupCount(alice, 1), 2);
+        assertEq(pong.getPowerupCount(bob, 1), 1);
+    }
+
+    function testPauseAndUnpauseGameFlow() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        pong.togglePause();
+        assertTrue(pong.isVaultPaused());
+        
+        vm.prank(bob);
+        vm.expectRevert(PingPong.GameplayPaused.selector);
+        pong.joinGame{value: STAKE}(1);
+        
+        pong.togglePause();
+        assertFalse(pong.isVaultPaused());
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        assertEq(pong.getGameStatus(1), 2);
+    }
+
     receive() external payable {}
 }
