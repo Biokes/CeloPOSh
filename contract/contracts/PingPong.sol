@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.28;
-
+// PingPong Game Contract - Web3 Gaming Platform
+pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract PingPong is ReentrancyGuard, Ownable {
+
     uint8 private constant WAITING_STATUS = 1;
     uint8 private constant ACTIVE_STATUS = 2;
     uint8 private constant ENDED_STATUS = 3;
@@ -16,6 +17,8 @@ contract PingPong is ReentrancyGuard, Ownable {
     uint8 private constant POWERUP_SHIELD = 3;
 
     uint256 private constant DEV_FEE_PERCENTAGE = 5;
+    uint256 private constant GAME_TIMEOUT = 7 days;
+    uint256 private constant MAX_PLAYER_GAMES = 10000;
 
     error GameplayPaused();
     error InvalidAmount();
@@ -30,8 +33,11 @@ contract PingPong is ReentrancyGuard, Ownable {
     error GameNotFound();
     error InsufficientPowerups();
     error TransferFailed();
+    error GameExpired();
+    error NotGameParticipant();
+    error InvalidWinner();
+    error PlayerGamesLimitExceeded();
 
-    // ============ Structs ============
     struct GameSession {
         uint64 gameId;
         address player1;
@@ -50,7 +56,6 @@ contract PingPong is ReentrancyGuard, Ownable {
         uint64 shieldCount;
     }
 
-    // ============ Events ============
     event GameCreated(
         uint64 indexed gameId,
         address indexed player1,
@@ -82,6 +87,13 @@ contract PingPong is ReentrancyGuard, Ownable {
         uint64 timestamp
     );
 
+    event TimeoutRefund(
+        uint64 indexed gameId,
+        address indexed player,
+        uint256 amount,
+        uint64 timestamp
+    );
+
     event PowerupUsed(
         uint64 indexed gameId,
         address indexed player,
@@ -92,7 +104,8 @@ contract PingPong is ReentrancyGuard, Ownable {
     event PowerupGranted(
         address indexed recipient,
         uint8 powerupType,
-        uint64 count,
+        uint64 countGranted,
+        uint64 totalCount,
         uint64 timestamp
     );
 
@@ -108,22 +121,33 @@ contract PingPong is ReentrancyGuard, Ownable {
         uint64 timestamp
     );
 
+    // ============ State Variables ============
     uint64 public totalGames;
     uint256 public devFeeVault;
     bool public paused;
 
-    mapping(uint64 => GameSession) public games;
+    mapping(uint64 => GameSession) private games;
+    mapping(uint64 => bool) private gameExists;
     mapping(address => PowerupInventory) public inventories;
-    mapping(address => uint64[]) public playerGames;
+    mapping(address => uint64[]) private playerGames;
 
     modifier notPaused() {
         if (paused) revert GameplayPaused();
         _;
     }
 
-    modifier gameExists(uint64 gameId) {
-        if (games[gameId].gameId == 0) revert GameNotFound();
+    modifier onlyGameExists(uint64 gameId) {
+        if (!gameExists[gameId]) revert GameNotFound();
         _;
+    }
+
+    function validateStatusTransition(uint8 current, uint8 next) internal pure {
+        bool valid = (current == WAITING_STATUS && next == ACTIVE_STATUS) ||
+                     (current == WAITING_STATUS && next == CANCELLED_STATUS) ||
+                     (current == ACTIVE_STATUS && next == ENDED_STATUS) ||
+                     (current == ACTIVE_STATUS && next == CANCELLED_STATUS) ||
+                     (current == WAITING_STATUS && next == CANCELLED_STATUS);
+        if (!valid) revert InvalidStatusTransition();
     }
 
     constructor() Ownable(msg.sender) {
@@ -133,7 +157,9 @@ contract PingPong is ReentrancyGuard, Ownable {
 
     function createGame() external payable notPaused nonReentrant {
         if (msg.value == 0) revert InvalidAmount();
+
         uint64 gameId = ++totalGames;
+
         games[gameId] = GameSession({
             gameId: gameId,
             player1: msg.sender,
@@ -146,6 +172,11 @@ contract PingPong is ReentrancyGuard, Ownable {
             completedAt: 0
         });
 
+        gameExists[gameId] = true;
+        
+        if (playerGames[msg.sender].length >= MAX_PLAYER_GAMES) {
+            revert PlayerGamesLimitExceeded();
+        }
         playerGames[msg.sender].push(gameId);
 
         emit GameCreated(
@@ -162,7 +193,7 @@ contract PingPong is ReentrancyGuard, Ownable {
         payable
         notPaused
         nonReentrant
-        gameExists(gameId)
+        onlyGameExists(gameId)
     {
         GameSession storage game = games[gameId];
 
@@ -175,6 +206,9 @@ contract PingPong is ReentrancyGuard, Ownable {
         game.escrowBalance += msg.value;
         game.status = ACTIVE_STATUS;
 
+        if (playerGames[msg.sender].length >= MAX_PLAYER_GAMES) {
+            revert PlayerGamesLimitExceeded();
+        }
         playerGames[msg.sender].push(gameId);
 
         emit GameJoined(gameId, msg.sender, msg.value, uint64(block.timestamp));
@@ -185,14 +219,16 @@ contract PingPong is ReentrancyGuard, Ownable {
         onlyOwner
         notPaused
         nonReentrant
-        gameExists(gameId)
+        onlyGameExists(gameId)
     {
         GameSession storage game = games[gameId];
 
         if (game.status != ACTIVE_STATUS) revert InvalidStatus();
         if (game.player2 == address(0)) revert Player2NotJoined();
-        if (winner != game.player1 && winner != game.player2) revert Unauthorized();
+        if (winner != game.player1 && winner != game.player2) revert InvalidWinner();
         if (game.escrowBalance == 0) revert InsufficientBalance();
+
+        validateStatusTransition(game.status, ENDED_STATUS);
 
         uint256 totalBalance = game.escrowBalance;
         uint256 devFee = (totalBalance * DEV_FEE_PERCENTAGE) / 100;
@@ -206,7 +242,6 @@ contract PingPong is ReentrancyGuard, Ownable {
 
         address loser = winner == game.player1 ? game.player2 : game.player1;
 
-        // Transfer winnings to winner
         (bool success, ) = winner.call{value: winnerAmount}("");
         if (!success) revert TransferFailed();
 
@@ -217,7 +252,7 @@ contract PingPong is ReentrancyGuard, Ownable {
         external
         notPaused
         nonReentrant
-        gameExists(gameId)
+        onlyGameExists(gameId)
     {
         GameSession storage game = games[gameId];
 
@@ -227,38 +262,91 @@ contract PingPong is ReentrancyGuard, Ownable {
         uint256 refundAmount = game.escrowBalance;
         if (refundAmount == 0) revert InvalidAmount();
 
+        validateStatusTransition(game.status, CANCELLED_STATUS);
+
         game.escrowBalance = 0;
         game.status = CANCELLED_STATUS;
         game.completedAt = uint64(block.timestamp);
 
-        // Transfer refund to player
         (bool success, ) = msg.sender.call{value: refundAmount}("");
         if (!success) revert TransferFailed();
 
         emit RefundClaimed(gameId, msg.sender, refundAmount, game.completedAt);
     }
 
-    // ============ Powerup Management ============
-    function grantPowerup(address recipient, uint8 powerupType)
+    function claimTimeoutRefund(uint64 gameId)
         external
-        onlyOwner
+        nonReentrant
+        onlyGameExists(gameId)
+        notPaused
     {
+        GameSession storage game = games[gameId];
+
+        bool isPlayer1 = msg.sender == game.player1;
+        bool isPlayer2 = msg.sender == game.player2;
+        if (!isPlayer1 && !isPlayer2) revert Unauthorized();
+
+        if (game.status == WAITING_STATUS) {
+            if (!isPlayer1) revert Unauthorized();
+            if (block.timestamp < game.createdAt + GAME_TIMEOUT) {
+                revert GameExpired();
+            }
+        }
+        else if (game.status == ACTIVE_STATUS) {
+            if (block.timestamp < game.createdAt + GAME_TIMEOUT) {
+                revert GameExpired();
+            }
+        } else {
+            revert InvalidStatus();
+        }
+
+        uint256 refundAmount = game.escrowBalance;
+        if (refundAmount == 0) revert InvalidAmount();
+
+        game.escrowBalance = 0;
+        game.status = CANCELLED_STATUS;
+        game.completedAt = uint64(block.timestamp);
+
+        if (game.player2 != address(0)) {
+            uint256 playerRefund = game.stakeAmount;
+            (bool success1, ) = game.player1.call{value: playerRefund}("");
+            (bool success2, ) = game.player2.call{value: playerRefund}("");
+            if (!success1 || !success2) revert TransferFailed();
+        } else {
+            (bool success, ) = game.player1.call{value: refundAmount}("");
+            if (!success) revert TransferFailed();
+        }
+
+        emit TimeoutRefund(gameId, msg.sender, refundAmount, uint64(block.timestamp));
+    }
+
+    function grantPowerup(address recipient, uint8 powerupType) external onlyOwner{
         if (powerupType < 1 || powerupType > 3) revert InvalidPowerupType();
+        if (recipient == address(0)) revert InvalidAmount();
 
         PowerupInventory storage inventory = inventories[recipient];
+        uint64 oldCount;
+        uint64 newCount;
 
         if (powerupType == POWERUP_PAD_STRETCH) {
+            oldCount = inventory.padStretchCount;
             inventory.padStretchCount++;
+            newCount = inventory.padStretchCount;
         } else if (powerupType == POWERUP_MULTIBALL) {
+            oldCount = inventory.multiballCount;
             inventory.multiballCount++;
+            newCount = inventory.multiballCount;
         } else {
+            oldCount = inventory.shieldCount;
             inventory.shieldCount++;
+            newCount = inventory.shieldCount;
         }
 
         emit PowerupGranted(
             recipient,
             powerupType,
-            getPowerupCount(recipient, powerupType),
+            1, // delta granted
+            newCount, // total count
             uint64(block.timestamp)
         );
     }
@@ -266,10 +354,13 @@ contract PingPong is ReentrancyGuard, Ownable {
     function usePowerup(uint64 gameId, uint8 powerupType)
         external
         notPaused
-        gameExists(gameId)
+        nonReentrant
+        onlyGameExists(gameId)
     {
         GameSession storage game = games[gameId];
-
+        if (msg.sender != game.player1 && msg.sender != game.player2) {
+            revert NotGameParticipant();
+        }
         if (game.status != ACTIVE_STATUS) revert InvalidStatus();
         if (powerupType < 1 || powerupType > 3) revert InvalidPowerupType();
 
@@ -289,16 +380,12 @@ contract PingPong is ReentrancyGuard, Ownable {
         emit PowerupUsed(gameId, msg.sender, powerupType, uint64(block.timestamp));
     }
 
-    // ============ Admin Functions ============
     function withdrawDevFees() external onlyOwner nonReentrant {
         uint256 feeAmount = devFeeVault;
         if (feeAmount == 0) revert InvalidAmount();
-
         devFeeVault = 0;
-
         (bool success, ) = owner().call{value: feeAmount}("");
         if (!success) revert TransferFailed();
-
         emit FeeWithdrawn(owner(), feeAmount, uint64(block.timestamp));
     }
 
@@ -311,7 +398,7 @@ contract PingPong is ReentrancyGuard, Ownable {
     function getGame(uint64 gameId)
         external
         view
-        gameExists(gameId)
+        onlyGameExists(gameId)
         returns (GameSession memory)
     {
         return games[gameId];
@@ -320,7 +407,7 @@ contract PingPong is ReentrancyGuard, Ownable {
     function getGameStatus(uint64 gameId)
         external
         view
-        gameExists(gameId)
+        onlyGameExists(gameId)
         returns (uint8)
     {
         return games[gameId].status;
@@ -329,7 +416,7 @@ contract PingPong is ReentrancyGuard, Ownable {
     function getGameEscrow(uint64 gameId)
         external
         view
-        gameExists(gameId)
+        onlyGameExists(gameId)
         returns (uint256)
     {
         return games[gameId].escrowBalance;
@@ -397,6 +484,11 @@ contract PingPong is ReentrancyGuard, Ownable {
         return playerGames[player].length;
     }
 
+    function isGameExists(uint64 gameId) external view returns (bool) {
+        return gameExists[gameId];
+    }
+
+    // ============ Receive Function ============
     receive() external payable {
         revert("Use createGame() to participate");
     }
