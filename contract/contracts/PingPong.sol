@@ -55,11 +55,12 @@ contract PingPong is ReentrancyGuard, Ownable {
     }
 
     struct PowerupInventory {
-        uint64 padStretchCount;
-        uint64 multiballCount;
-        uint64 shieldCount;
+        uint64 padStretchCount; // Count of pad stretch powerups
+        uint64 multiballCount; // Count of multiball powerups
+        uint64 shieldCount; // Count of shield powerups
     }
 
+    // ============ Events ============
     event GameCreated(
         uint64 indexed gameId,
         address indexed player1,
