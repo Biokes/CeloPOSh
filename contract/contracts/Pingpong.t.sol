@@ -1392,5 +1392,35 @@ contract PingPongTest is Test {
         assertTrue(game.createdAt >= beforeTime && game.createdAt <= afterTime);
     }
 
+    function testMultiplePlayersCreateGamesConcurrently() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(carol);
+        pong.createGame{value: STAKE}();
+        
+        assertEq(pong.getTotalGames(), 3);
+    }
+
+    function testCreateGamePlayerOneSet() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        PingPong.GameSession memory game = pong.getGame(1);
+        assertEq(game.player1, alice);
+        assertEq(game.player2, address(0));
+    }
+
+    function testCreateGameStatusNotActive() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        uint256 status = pong.getGameStatus(1);
+        assertNotEq(status, 2);
+    }
+
     receive() external payable {}
 }
