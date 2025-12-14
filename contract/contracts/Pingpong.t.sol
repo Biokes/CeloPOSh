@@ -2125,5 +2125,68 @@ contract PingPongTest is Test {
         assertEq(pong.getGameStatus(2), 2);
     }
 
+    function testGameCreationWithVaryingStakes() public {
+        vm.prank(alice);
+        pong.createGame{value: 1 ether}();
+        
+        vm.prank(bob);
+        pong.createGame{value: 2 ether}();
+        
+        vm.prank(carol);
+        pong.createGame{value: 5 ether}();
+        
+        assertEq(pong.getGameEscrow(1), 1 ether);
+        assertEq(pong.getGameEscrow(2), 2 ether);
+        assertEq(pong.getGameEscrow(3), 5 ether);
+    }
+
+    function testFeeCalculationAccuracy() public {
+        vm.prank(alice);
+        pong.createGame{value: 10 ether}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: 10 ether}(1);
+        
+        uint256 totalStake = 20 ether;
+        uint256 fee = (totalStake * 5) / 100;
+        
+        pong.endGame(1, alice);
+        
+        assertEq(pong.getDevFees(), fee);
+    }
+
+    function testGameEndSequentialWinners() public {
+        for (uint256 i = 1; i <= 3; i++) {
+            vm.prank(alice);
+            pong.createGame{value: STAKE}();
+            
+            vm.prank(bob);
+            pong.joinGame{value: STAKE}(i);
+            
+            if (i % 2 == 1) {
+                pong.endGame(i, alice);
+            } else {
+                pong.endGame(i, bob);
+            }
+        }
+        
+        assertEq(pong.getGameStatus(1), 3);
+        assertEq(pong.getGameStatus(2), 3);
+        assertEq(pong.getGameStatus(3), 3);
+    }
+
+    function testRefundBalancePrecision() public {
+        vm.prank(alice);
+        pong.createGame{value: 3.5 ether}();
+        
+        uint256 balanceBefore = alice.balance;
+        
+        vm.prank(alice);
+        pong.requestRefund(1);
+        
+        uint256 balanceAfter = alice.balance;
+        assertEq(balanceAfter - balanceBefore, 3.5 ether);
+    }
+
     receive() external payable {}
 }
