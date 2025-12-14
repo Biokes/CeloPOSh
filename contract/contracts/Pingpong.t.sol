@@ -2060,5 +2060,70 @@ contract PingPongTest is Test {
         assertEq(pong.getGameStatus(2), 4);
     }
 
+    function testGameEndingAffectsOtherGames() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(alice);
+        pong.joinGame{value: STAKE}(2);
+        
+        pong.endGame(2, alice);
+        
+        assertEq(pong.getGameStatus(1), 1);
+        assertEq(pong.getGameStatus(2), 3);
+    }
+
+    function testTimeoutRefundDoesNotAffectOthers() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.createGame{value: STAKE}();
+        
+        vm.warp(block.timestamp + TIMEOUT + 1);
+        
+        vm.prank(alice);
+        pong.claimTimeoutRefund(1);
+        
+        assertEq(pong.getGameStatus(1), 4);
+        assertEq(pong.getGameStatus(2), 1);
+    }
+
+    function testPowerupUsageInMultipleGames() public {
+        pong.grantPowerup(alice, 1);
+        pong.grantPowerup(alice, 1);
+        
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        vm.prank(alice);
+        pong.usePowerup(1, 1);
+        
+        assertEq(pong.getPowerupCount(alice, 1), 1);
+    }
+
+    function testCrossPlayerGameSequence() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(carol);
+        pong.joinGame{value: STAKE}(1);
+        
+        vm.prank(alice);
+        pong.joinGame{value: STAKE}(2);
+        
+        assertEq(pong.getGameStatus(1), 2);
+        assertEq(pong.getGameStatus(2), 2);
+    }
+
     receive() external payable {}
 }
