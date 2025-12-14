@@ -2688,6 +2688,10 @@ contract PingPongTest is Test {
     }
 
     function testTimeoutRefundBobPlayer() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+
+        vm.prank(bob);
 
     receive() external payable {}
 }
