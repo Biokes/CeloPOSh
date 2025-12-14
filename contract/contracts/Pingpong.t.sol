@@ -1810,7 +1810,6 @@ contract PingPongTest is Test {
     function testGameCreationEdgeCaseJoin() public {
         vm.prank(alice);
         pong.createGame{value: STAKE}();
-        
         vm.prank(bob);
         pong.joinGame{value: STAKE}(1);
         
@@ -1850,6 +1849,78 @@ contract PingPongTest is Test {
         assertEq(pong.getPowerupCount(alice, 1), 1);
         assertEq(pong.getPowerupCount(bob, 2), 1);
         assertEq(pong.getPowerupCount(carol, 3), 1);
+    }
+
+    function testCascadingGameCreations() public {
+        for (uint256 i = 1; i <= 10; i++) {
+            vm.prank(alice);
+            pong.createGame{value: STAKE}();
+        }
+        assertEq(pong.getTotalGames(), 10);
+    }
+
+    function testGameJoinSequential() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(carol);
+        pong.joinGame{value: STAKE}(1);
+        
+        assertEq(pong.getGameStatus(2), 1);
+        assertEq(pong.getGameStatus(1), 2);
+    }
+
+    function testFeeAccumulationMultipleGames() public {
+        for (uint256 i = 0; i < 3; i++) {
+            vm.prank(alice);
+            pong.createGame{value: STAKE}();
+            
+            vm.prank(bob);
+            pong.joinGame{value: STAKE}(i + 1);
+            
+            pong.endGame(i + 1, alice);
+        }
+        
+        uint256 totalFees = pong.getDevFees();
+        assertGt(totalFees, 0);
+    }
+
+    function testTimeoutRefundMultipleGamesSequence() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.createGame{value: STAKE}();
+        
+        vm.warp(block.timestamp + TIMEOUT + 1);
+        
+        vm.prank(alice);
+        pong.claimTimeoutRefund(1);
+        
+        vm.prank(bob);
+        pong.claimTimeoutRefund(2);
+        
+        assertEq(pong.getGameStatus(1), 4);
+        assertEq(pong.getGameStatus(2), 4);
+    }
+
+    function testEndGameWithAlternateWinner() public {
+        for (uint256 i = 0; i < 2; i++) {
+            vm.prank(alice);
+            pong.createGame{value: STAKE}();
+            
+            vm.prank(bob);
+            pong.joinGame{value: STAKE}(i + 1);
+            
+            if (i % 2 == 0) {
+                pong.endGame(i + 1, alice);
+            } else {
+                pong.endGame(i + 1, bob);
+            }
+        }
     }
 
     receive() external payable {}
