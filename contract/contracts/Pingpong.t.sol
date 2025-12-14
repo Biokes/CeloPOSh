@@ -2665,6 +2665,11 @@ contract PingPongTest is Test {
         pong.createGame{value: 10 ether}();
 
         vm.prank(bob);
+        pong.joinGame{value: 10 ether}(1);
+        pong.endGame(1, alice);
+    }
+
+    function testRefundUnauthorizedPlayer() public {
 
     receive() external payable {}
 }
