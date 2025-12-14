@@ -2414,5 +2414,61 @@ contract PingPongTest is Test {
         assertEq(pong.getPowerupCount(alice, 1), 10);
     }
 
+    function testGameStatusAfterJoin() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        uint256 statusBefore = pong.getGameStatus(1);
+        assertEq(statusBefore, 1);
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        uint256 statusAfter = pong.getGameStatus(1);
+        assertEq(statusAfter, 2);
+    }
+
+    function testGameIDSequence() public {
+        for (uint256 i = 1; i <= 5; i++) {
+            vm.prank(alice);
+            pong.createGame{value: STAKE}();
+            
+            PingPong.GameSession memory game = pong.getGame(i);
+            assertEq(game.id, uint64(i));
+        }
+    }
+
+    function testPlayerHistoryAfterJoin() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        
+        uint64[] memory aliceGames = pong.getPlayerGames(alice);
+        uint64[] memory bobGames = pong.getPlayerGames(bob);
+        
+        assertEq(aliceGames.length, 1);
+        assertEq(bobGames.length, 1);
+    }
+
+    function testGameExistsAfterCreation() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        assertTrue(pong.isGameExists(1));
+    }
+
+    function testGameNotExistsAfterRefund() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(alice);
+        pong.requestRefund(1);
+        
+        assertTrue(pong.isGameExists(1));
+        assertEq(pong.getGameStatus(1), 4);
+    }
+
     receive() external payable {}
 }
