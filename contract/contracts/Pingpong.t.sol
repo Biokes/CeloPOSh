@@ -2692,6 +2692,11 @@ contract PingPongTest is Test {
         pong.createGame{value: STAKE}();
 
         vm.prank(bob);
+        pong.joinGame{value: STAKE}(1);
+        vm.warp(block.timestamp + TIMEOUT + 1);
+    }
+
+    function testPowerupMultipleTypes() public {
 
     receive() external payable {}
 }
