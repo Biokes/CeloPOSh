@@ -17,6 +17,7 @@ contract PingPong is ReentrancyGuard, Ownable {
     uint8 private constant POWERUP_MULTIBALL = 2;
     uint8 private constant POWERUP_SHIELD = 3;
 
+    // ============ System Configuration Constants ============
     uint256 private constant DEV_FEE_PERCENTAGE = 5;
     uint256 private constant GAME_TIMEOUT = 7 days;
     uint256 private constant MAX_PLAYER_GAMES = 10000;
