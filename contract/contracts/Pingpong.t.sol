@@ -2701,6 +2701,11 @@ contract PingPongTest is Test {
         pong.grantPowerup(bob, 2);
 
         pong.grantPowerup(carol, 3);
+        assertEq(pong.getPowerupCount(alice, 1), 1);
+        assertEq(pong.getPowerupCount(bob, 2), 1);
+    }
+
+    function testPowerupUseOnBobPlayer() public {
 
     receive() external payable {}
 }
