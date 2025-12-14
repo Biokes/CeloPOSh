@@ -2656,6 +2656,11 @@ contract PingPongTest is Test {
         pong.createGame{value: 0.001 ether}();
 
         vm.prank(bob);
+        pong.joinGame{value: 0.001 ether}(1);
+        assertEq(pong.getGameStatus(1), 2);
+    }
+
+    function testEndGameFeeDistribution() public {
 
     receive() external payable {}
 }
