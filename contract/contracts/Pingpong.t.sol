@@ -2188,5 +2188,63 @@ contract PingPongTest is Test {
         assertEq(balanceAfter - balanceBefore, 3.5 ether);
     }
 
+    function testGameHistoryOrdering() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        uint64[] memory games = pong.getPlayerGames(alice);
+        assertEq(games[0], 1);
+        assertEq(games[1], 2);
+    }
+
+    function testPowerupCounterAccuracy() public {
+        for (uint256 i = 0; i < 5; i++) {
+            pong.grantPowerup(alice, 1);
+        }
+        
+        assertEq(pong.getPowerupCount(alice, 1), 5);
+    }
+
+    function testGameEscrowAfterEachJoin() public {
+        vm.prank(alice);
+        pong.createGame{value: 2 ether}();
+        
+        assertEq(pong.getGameEscrow(1), 2 ether);
+        
+        vm.prank(bob);
+        pong.joinGame{value: 2 ether}(1);
+        
+        assertEq(pong.getGameEscrow(1), 4 ether);
+    }
+
+    function testTimeoutRefundPrecision() public {
+        vm.prank(alice);
+        pong.createGame{value: 7.5 ether}();
+        
+        vm.warp(block.timestamp + TIMEOUT + 1);
+        
+        uint256 balanceBefore = alice.balance;
+        vm.prank(alice);
+        pong.claimTimeoutRefund(1);
+        
+        assertEq(alice.balance - balanceBefore, 7.5 ether);
+    }
+
+    function testMultiplayerGameConcurrency() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(bob);
+        pong.createGame{value: STAKE}();
+        
+        vm.prank(carol);
+        pong.createGame{value: STAKE}();
+        
+        assertEq(pong.getTotalGames(), 3);
+    }
+
     receive() external payable {}
 }
