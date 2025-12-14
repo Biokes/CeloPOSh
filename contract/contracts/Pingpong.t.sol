@@ -2679,6 +2679,10 @@ contract PingPongTest is Test {
     }
 
     function testMultipleGameRefunds() public {
+        vm.prank(alice);
+        pong.createGame{value: STAKE}();
+
+        vm.prank(bob);
 
     receive() external payable {}
 }
