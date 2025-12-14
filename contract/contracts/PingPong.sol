@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract PingPong is ReentrancyGuard, Ownable {
-
+    // ============ Game Status Constants ============
     uint8 private constant WAITING_STATUS = 1;
     uint8 private constant ACTIVE_STATUS = 2;
     uint8 private constant ENDED_STATUS = 3;
